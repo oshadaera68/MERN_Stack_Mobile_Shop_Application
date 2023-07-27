@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Form, Button, Row, Col, Container } from "react-bootstrap";
 import { Snackbar } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
+import axios from "axios";
 
 const Item = () => {
   const [itemCode, setItemCode] = useState("");
@@ -9,16 +10,14 @@ const Item = () => {
   const [itemQty, setItemQty] = useState("");
   const [itemUnitPrice, setItemUnitPrice] = useState("");
   const [errors, setErrors] = useState({});
-  const [openSnackbar, setOpenSnackbar] = useState(false);
   const [openAddSnackbar, setOpenAddSnackbar] = useState(false);
   const [openUpdateSnackbar, setOpenUpdateSnackbar] = useState(false);
   const [openDeleteSnackbar, setOpenDeleteSnackbar] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = {};
 
-    // Perform validations
     if (!itemCode.trim()) {
       validationErrors.itemCode = "Item Code is required.";
     }
@@ -35,45 +34,76 @@ const Item = () => {
       validationErrors.itemUnitPrice = "Item Unit Price must be a number.";
     }
 
-    // If there are validation errors, set them in the state and prevent form submission
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
-    // If no validation errors, proceed with form submission
-    // Add your logic here to handle form submission, e.g., API call, etc.
+    try {
+      const newItem = {
+        itemCode,
+        itemName,
+        itemQty: Number(itemQty),
+        itemUnitPrice: Number(itemUnitPrice),
+      };
+      await axios.post("your_backend_add_item_url", newItem);
+      setOpenAddSnackbar(true);
 
-    setOpenSnackbar(true);
-    // Clear the form fields and errors after successful submission
-    setItemCode("");
-    setItemName("");
-    setItemQty("");
-    setItemUnitPrice("");
-    setErrors({});
+      setItemCode("");
+      setItemName("");
+      setItemQty("");
+      setItemUnitPrice("");
+      setErrors({});
+    } catch (error) {
+      console.error("Error adding item:", error);
+    }
   };
 
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
+  const handleDelete = async () => {
+    if (!itemCode) {
       return;
     }
-    setOpenSnackbar(false);
+
+    try {
+      await axios.delete("your_backend_delete_item_url", {
+        data: { itemCode },
+      });
+      setOpenDeleteSnackbar(true);
+
+      setItemCode("");
+      setItemName("");
+      setItemQty("");
+      setItemUnitPrice("");
+      setErrors({});
+    } catch (error) {
+      console.error("Error deleting item:", error);
+    }
   };
 
-  const handleDelete = () => {
-    // Add your logic here to handle delete action, e.g., API call, etc.
+  const handleUpdate = async () => {
+    if (!itemCode) {
+      return;
+    }
 
-    setOpenDeleteSnackbar(true);
-    // Clear the form fields and errors after successful delete
-    setItemCode("");
-    setItemName("");
-    setItemQty("");
-    setItemUnitPrice("");
-    setErrors({});
-  };
+    try {
+      const updatedItem = {
+        itemCode,
+        itemName,
+        itemQty: Number(itemQty),
+        itemUnitPrice: Number(itemUnitPrice),
+      };
 
-  const handleUpdate = () => {
-    // Add your logic here to handle update action, e.g., API call, etc.
+      await axios.put("your_backend_update_item_url", updatedItem);
+      setOpenUpdateSnackbar(true);
+
+      setItemCode("");
+      setItemName("");
+      setItemQty("");
+      setItemUnitPrice("");
+      setErrors({});
+    } catch (error) {
+      console.error("Error updating item:", error);
+    }
 
     setOpenUpdateSnackbar(true);
     // Clear the form fields and errors after successful update
@@ -83,7 +113,6 @@ const Item = () => {
     setItemUnitPrice("");
     setErrors({});
   };
-
 
   const handleCloseAddSnackbar = (event, reason) => {
     if (reason === "clickaway") {
@@ -105,8 +134,6 @@ const Item = () => {
     }
     setOpenUpdateSnackbar(false);
   };
-
-  
 
   return (
     <Container>
@@ -170,20 +197,34 @@ const Item = () => {
         </Row>
         <Row>
           <Col>
-            <Button type="submit" className="text-black" variant="success">
+            <Button
+              type="submit"
+              className="text-black"
+              variant="success"
+              onClick={handleSubmit}
+            >
               Add
             </Button>
-            <Button variant="warning" className="left-2" disabled={!itemCode}>
+            <Button
+              variant="warning"
+              className="left-2"
+              disabled={!itemCode}
+              onClick={handleUpdate}
+            >
               Update
             </Button>
-            <Button variant="danger" className="left-2" disabled={!itemCode}>
+            <Button
+              variant="danger"
+              className="left-2"
+              disabled={!itemCode}
+              onClick={handleDelete}
+            >
               Delete
             </Button>
           </Col>
         </Row>
       </Form>
 
-      {/* Snackbar for Add action */}
       <Snackbar
         open={openAddSnackbar}
         autoHideDuration={3000}
@@ -198,7 +239,6 @@ const Item = () => {
         </MuiAlert>
       </Snackbar>
 
-      {/* Snackbar for Delete action */}
       <Snackbar
         open={openDeleteSnackbar}
         autoHideDuration={3000}
@@ -213,7 +253,6 @@ const Item = () => {
         </MuiAlert>
       </Snackbar>
 
-      {/* Snackbar for Update action */}
       <Snackbar
         open={openUpdateSnackbar}
         autoHideDuration={3000}
@@ -227,7 +266,6 @@ const Item = () => {
           Item updated successfully!
         </MuiAlert>
       </Snackbar>
-
     </Container>
   );
 };

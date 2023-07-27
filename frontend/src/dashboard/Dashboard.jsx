@@ -35,11 +35,8 @@ const Dashboard = () => {
               <Nav.Link href="#services" className="text-white">
                 Services
               </Nav.Link>
-              <Nav.Link href="#item" className="text-white">
-                Item
-              </Nav.Link>
               <NavDropdown title="Others" className="text-white" id="basic-nav-dropdown">
-              <Link to='item'><NavDropdown.Item href="#action/3.1">Item</NavDropdown.Item></Link>
+              <Link to='item'><NavDropdown.Item href="">Item</NavDropdown.Item></Link>
             </NavDropdown>
             </Nav>
             <Form className="d-flex p-1">
