@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 const port = 4001;
 
-const url = "mongodb://127.0.0.1:27017/mobileshop";
+const url = "mongodb://127.0.0.1:27017/mobileshops";
 
 mongoose.connect(url, {
   useNewUrlParser: true,
@@ -14,17 +14,18 @@ mongoose.connect(url, {
 
 const allowedOrigins = ["http://localhost:3000"];
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (allowedOrigins.indexOf(!origin) !== -1 || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-  })
-);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
 
 const item = require("./Routes/item");
 const signIn = require("./Routes/signin");

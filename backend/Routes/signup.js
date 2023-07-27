@@ -1,7 +1,8 @@
 const express = require('express')
 const app = express();
 const router = express.Router()
-const signUp = require('../model/signup.model')
+const signUp = require('../model/signup.model');
+
 
 app.use(express.json())
 
@@ -15,7 +16,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    const signIns = new Post({
+    const signIns = new signUp({
         name: req.body.name,
         emailAddress: req.body.emailAddress,
         password: req.body.password,
@@ -23,8 +24,8 @@ router.post('/', async (req, res) => {
     })
 
     try {
-        const signins = await signIns.save()
-        res.json(signins)
+        const signups = await signUp.save()
+        res.json(signups)
     } catch (err) {
         res.send('Err: ' + err)
     }

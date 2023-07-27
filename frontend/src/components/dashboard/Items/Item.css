@@ -1,0 +1,23 @@
+.TopBar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.SearchItem{
+    border: 1px solid #ccc;
+    border-radius:6px;
+}
+
+@media (max-width: 768px) {
+    .TopBar{
+        flex-direction: column-reverse;
+        gap: 10px;
+        align-items: flex-end;
+    }
+
+    .SearchItem{
+        width:  -webkit-fill-available;
+        display: flex;
+    }
+}

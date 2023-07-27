@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    const signIn = new Post({
+    const signIn = new SignIn({
         userName: req.body.userName,
         password: req.body.password
     })

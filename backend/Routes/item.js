@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    const items = new Post({
+    const items = new Item({
         itemId: req.body.itemId,
         itemName: req.body.itemName,
         itemQty: req.body.itemQty,
@@ -49,7 +49,7 @@ router.put('/:id', async(req, res)=>{
         const update = await postUpdate.save()
         res.json(update)
     } catch (error) {
-        res.send('Err: ' + err)
+        res.send('Err: ' + error)
     }
 })
 
