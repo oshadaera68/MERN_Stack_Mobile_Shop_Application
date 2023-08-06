@@ -1,66 +1,77 @@
-const express = require('express')
+const express = require('express');
 const app = express();
-const router = express.Router()
-const Item = require('../model/item.model')
+const router = express.Router();
+const Item = require('../model/item.model');
 
-app.use(express.json())
+app.use(express.json());
 
 router.get('/', async (req, res) => {
-    try {
-        const item = await Item.find()
-        res.json(item)
-    } catch (err) {
-        res.send('Err: ' + err)
-    }
-})
+  try {
+    const items = await Item.find();
+    res.json(items);
+  } catch (err) {
+    res.status(500).json({ error: 'Error fetching items' });
+  }
+});
 
-router.post('/', async (req, res) => {
-    const items = new Item({
-        itemId: req.body.itemId,
-        itemName: req.body.itemName,
-        itemQty: req.body.itemQty,
-        itemPrice: req.body.itemPrice,
-    })
+router.post('/item', async (req, res) => {
+  const item = new Item({
+    itemId: req.body.itemId,
+    itemName: req.body.itemName,
+    itemQty: req.body.itemQty,
+    itemPrice: req.body.itemPrice,
+  });
 
-    try {
-        const saveItem = await items.save()
-        res.json(saveItem)
-    } catch (err) {
-        res.send('Err: ' + err)
-    }
-})
+  try {
+    const savedItem = await item.save();
+    res.json(savedItem);
+  } catch (err) {
+    res.status(400).json({ error: 'Error adding item' });
+  }
+});
 
 router.get('/:id', async (req, res) => {
-    try {
-        const item = await Item.findById(req.params.id)
-        res.json(item)
-    } catch (err) {
-        res.send('Err: ' + err)
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ error: 'Item not found' });
     }
-})
+    res.json(item);
+  } catch (err) {
+    res.status(500).json({ error: 'Error fetching item' });
+  }
+});
 
-router.put('/:id', async(req, res)=>{
-    try {
-        const itemUpdate = await Item.findById(req.params.id)
-        itemUpdate.itemId= req.body.itemId;
-        itemUpdate.itemName= req.body.itemName;
-        itemUpdate.itemQty= req.body.itemQty;
-        itemUpdate.itemPrice= req.body.itemPrice;
-        const update = await postUpdate.save()
-        res.json(update)
-    } catch (error) {
-        res.send('Err: ' + error)
+router.put('/:id', async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ error: 'Item not found' });
     }
-})
+
+    item.itemId = req.body.itemId;
+    item.itemName = req.body.itemName;
+    item.itemQty = req.body.itemQty;
+    item.itemPrice = req.body.itemPrice;
+    const updatedItem = await item.save();
+    res.json(updatedItem);
+  } catch (err) {
+    res.status(500).json({ error: 'Error updating item' });
+  }
+});
 
 router.delete('/:id', async (req, res) => {
-    try {
-        const itemId = await Item.findById(req.params.id)
-        const response = await itemId.remove();
-        res.json(response)
-    } catch (err) {
-        res.send('Err: ' + err)
+  try {
+    const item = await Item.findById(req.params.id);
+    if (!item) {
+      return res.status(404).json({ error: 'Item not found' });
     }
-})
+
+    const response = await item.remove();
+    res.json(response);
+  } catch (err) {
+    res.status(500).json({ error: 'Error deleting item' });
+  }
+});
 
 module.exports = router;

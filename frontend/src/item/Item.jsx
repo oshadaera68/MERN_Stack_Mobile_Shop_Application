@@ -41,12 +41,12 @@ const Item = () => {
 
     try {
       const newItem = {
-        itemCode,
+        itemId: itemCode,
         itemName,
         itemQty: Number(itemQty),
-        itemUnitPrice: Number(itemUnitPrice),
+        itemPrice: Number(itemUnitPrice),
       };
-      await axios.post("your_backend_add_item_url", newItem);
+      await axios.post("http://localhost:4001/item", newItem);
       setOpenAddSnackbar(true);
 
       setItemCode("");
@@ -65,7 +65,7 @@ const Item = () => {
     }
 
     try {
-      await axios.delete("your_backend_delete_item_url", {
+      await axios.delete('http://localhost:4001/itemcode', {
         data: { itemCode },
       });
       setOpenDeleteSnackbar(true);
@@ -87,13 +87,13 @@ const Item = () => {
 
     try {
       const updatedItem = {
-        itemCode,
+        itemId: itemCode,
         itemName,
         itemQty: Number(itemQty),
-        itemUnitPrice: Number(itemUnitPrice),
+        itemPrice: Number(itemUnitPrice),
       };
 
-      await axios.put("your_backend_update_item_url", updatedItem);
+      await axios.put('http://localhost:4001/itemId', updatedItem);
       setOpenUpdateSnackbar(true);
 
       setItemCode("");
@@ -104,14 +104,6 @@ const Item = () => {
     } catch (error) {
       console.error("Error updating item:", error);
     }
-
-    setOpenUpdateSnackbar(true);
-    // Clear the form fields and errors after successful update
-    setItemCode("");
-    setItemName("");
-    setItemQty("");
-    setItemUnitPrice("");
-    setErrors({});
   };
 
   const handleCloseAddSnackbar = (event, reason) => {

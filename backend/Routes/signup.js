@@ -1,22 +1,13 @@
 const express = require('express')
 const app = express();
 const router = express.Router()
-const signUp = require('../model/signup.model');
+const SignUp = require('../model/signup.model');
 
 
 app.use(express.json())
 
-router.get('/', async (req, res) => {
-    try {
-        const signup = await signUp.find()
-        res.json(signup)
-    } catch (err) {
-        res.send('Err: ' + err)
-    }
-})
-
 router.post('/', async (req, res) => {
-    const signIns = new signUp({
+    const signups = new SignUp({
         name: req.body.name,
         emailAddress: req.body.emailAddress,
         password: req.body.password,
@@ -24,8 +15,8 @@ router.post('/', async (req, res) => {
     })
 
     try {
-        const signups = await signUp.save()
-        res.json(signups)
+        const signup = await signups.save()
+        res.json(signup)
     } catch (err) {
         res.send('Err: ' + err)
     }

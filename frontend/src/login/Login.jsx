@@ -10,21 +10,30 @@ import {
 import { FaGoogle, FaFacebook, FaTwitter } from "react-icons/fa";
 import backgroundImage from "../../src/assets/background.jpg";
 import "./login.css";
+import axios from "axios";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isError, setIsError] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
       setIsError(true);
     } else {
-      // Perform login logic here, e.g., making API calls, etc.
-      // For demonstration purposes, let's just log the user in if both fields are filled.
-      console.log("Logged in successfully!");
+      try {
+        const response = await axios.post("", {
+          email,
+          password,
+        });
+        console.log("Logged in successfully!");
+        console.log("User token:", response.data.token);
+      } catch (error) {
+        console.error("Error while logging in:", error.message);
+        setIsError(true);
+      }
     }
   };
 
@@ -81,7 +90,7 @@ const Login = () => {
             />
             <br />
             <br />
-            <Button
+            <Link to='/'><Button
               type="submit"
               fullWidth
               variant="contained"
@@ -89,7 +98,7 @@ const Login = () => {
               className="mt-2"
             >
               Sign In
-            </Button>
+            </Button></Link>
             <br />
             <br />
             <h2>Or</h2>

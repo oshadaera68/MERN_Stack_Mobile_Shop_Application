@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { Container, Typography, TextField, Button, Snackbar } from '@mui/material';
 import Back from '../assets/back1.jpg';
@@ -22,8 +23,15 @@ const Signup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (formData.name && formData.email && formData.password && formData.password === formData.confirmPassword) {
-      // Perform signup logic here (e.g., call API or authenticate user)
-      console.log('Form data:', formData);
+     
+      axios.post("http://localhost:4001/signup", formData)
+        .then((response) => {
+          console.log('Signup successful!', response.data);
+
+        })
+        .catch((error) => {
+          console.error('Error during signup:', error);
+        });
     } else {
       setShowSnackbar(true);
     }
@@ -93,7 +101,7 @@ const Signup = () => {
             />
             <br />
             <br />
-            <Button
+            <Link to='/login'><Button
               type="submit"
               fullWidth
               variant="contained"
@@ -102,7 +110,7 @@ const Signup = () => {
               sx={{ py: 1.5 }} 
             >
               Sign Up
-            </Button>
+            </Button></Link>
           </form>
           <br />
           <Typography variant="body2" align="center" className="mt-2" style={{ fontFamily: 'Poppins' }}>
